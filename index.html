@@ -103,7 +103,7 @@
             margin-bottom: 20px;
         }
         
-        /* 转盘样式 */
+        /* 转盘样式 - 修复字体显示 */
         .wheel-container {
             position: relative;
             width: 300px;
@@ -136,7 +136,7 @@
             transform: rotate(calc(72deg * var(--i)));
         }
         
-        /* 转盘文字样式 */
+        /* 修复字体显示的关键部分 */
         .segment span {
             position: absolute;
             width: 100px;
@@ -431,6 +431,7 @@
             const randomInSegment = Math.random() * segmentAngle;
             const targetAngle = targetPrizeIndex * segmentAngle + randomInSegment;
             
+            // 计算总旋转角度
             const totalRotation = fullCircles * 360 + (360 - targetAngle);
             
             wheel.style.transition = 'transform 3s cubic-bezier(0.16, 0.89, 0.25, 1)';
