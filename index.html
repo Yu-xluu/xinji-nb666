@@ -103,7 +103,7 @@
             margin-bottom: 20px;
         }
         
-        /* 转盘样式 */
+        /* 转盘样式 - 修复字体显示 */
         .wheel-container {
             position: relative;
             width: 300px;
@@ -135,14 +135,16 @@
             transform: rotate(calc(72deg * var(--i)));
         }
         
+        /* 修复字体显示的关键部分 */
         .segment span {
             position: absolute;
-            right: 20px;
-            top: 20px;
-            transform: rotate(45deg);
-            font-size: 14px;
+            width: 100px;
+            text-align: center;
+            transform: rotate(90deg) translateX(60px);
+            font-size: 16px;
             font-weight: bold;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+            color: #333;
         }
         
         .segment-1 {
@@ -363,7 +365,8 @@
     <!-- 主内容 -->
     <div class="content" id="content">
         <div class="image-container">
-            <img src="./qt.gif" alt="图片" class="prank-image">
+            <!-- 示例图片 - 在实际使用时替换为你的qt.gif -->
+            <img src="https://via.placeholder.com/300x200/ff6b6b/ffffff?text=示例图片" alt="图片" class="prank-image">
         </div>
         <div class="message">
             <b>
