@@ -13,7 +13,7 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #333;
             min-height: 100vh;
@@ -119,6 +119,7 @@
             overflow: hidden;
             transition: transform 3s cubic-bezier(0.16, 0.89, 0.25, 1);
             box-shadow: 0 0 0 8px #ff6b6b, 0 0 20px rgba(0, 0, 0, 0.3);
+            transform: rotate(0deg);
         }
         
         .segment {
@@ -140,7 +141,7 @@
             position: absolute;
             width: 100px;
             text-align: center;
-            transform: rotate(90deg) translateX(60px);
+            transform: rotate(45deg) translate(35px, 10px);
             font-size: 16px;
             font-weight: bold;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
@@ -338,7 +339,7 @@
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel" id="wheel">
-                        <!-- 所有区域都显示特等奖 -->
+                        <!-- 转盘区域 -->
                         <div class="segment segment-1" style="--i:0;"><span>谢谢参与</span></div>
                         <div class="segment segment-2" style="--i:1;"><span>一等奖</span></div>
                         <div class="segment segment-3" style="--i:2;"><span>二等奖</span></div>
@@ -365,8 +366,8 @@
     <!-- 主内容 -->
     <div class="content" id="content">
         <div class="image-container">
-            <!-- 示例图片 - 在实际使用时替换为你的qt.gif -->
-            <img src="https://via.placeholder.com/300x200/ff6b6b/ffffff?text=示例图片" alt="图片" class="prank-image">
+            <!-- 替换为你的qt.gif -->
+            <img src="https://media.giphy.com/media/3o7aCTPPm4OHfRLSH6/giphy.gif" alt="搞笑图片" class="prank-image">
         </div>
         <div class="message">
             <b>
@@ -388,10 +389,24 @@
     <script>
         // 确保100%中特等奖的JavaScript
         let isSpinning = false;
+        const prizes = ["谢谢参与", "一等奖", "二等奖", "三等奖", "特等奖"];
+        
+        // 计算每个奖项对应的角度范围
+        const prizeAngles = prizes.map((_, index) => {
+            const segmentAngle = 360 / prizes.length;
+            return {
+                start: index * segmentAngle,
+                end: (index + 1) * segmentAngle
+            };
+        });
 
         window.onload = function() {
             const modal = document.getElementById('modal');
             modal.style.display = 'flex';
+            
+            // 重置转盘位置
+            const wheel = document.getElementById('wheel');
+            wheel.style.transform = 'rotate(0deg)';
         };
 
         function startLottery() {
@@ -406,18 +421,24 @@
             lotteryButton.textContent = '抽奖中...';
             isSpinning = true;
             
-            // 100%指向特等奖的旋转计算
-            // 转5圈 + 随机停在特等奖区域
+            // 转5圈 + 确保停在特等奖区域
             const fullCircles = 5;
-            // 所有区域都是特等奖，所以随便转都会停在特等奖
-            const randomStop = Math.floor(Math.random() * 72); // 0-71度随机
-            const totalRotation = fullCircles * 360 + randomStop;
+            // 特等奖是第5个区域（索引4），对应角度范围288°-360°
+            const targetPrizeIndex = 4; // 特等奖的索引
+            const segmentAngle = 360 / prizes.length;
+            
+            // 计算特等奖区域的随机角度（在特等奖区域内随机选择一点）
+            const randomInSegment = Math.random() * segmentAngle;
+            const targetAngle = targetPrizeIndex * segmentAngle + randomInSegment;
+            
+            const totalRotation = fullCircles * 360 + (360 - targetAngle);
             
             wheel.style.transition = 'transform 3s cubic-bezier(0.16, 0.89, 0.25, 1)';
             wheel.style.transform = `rotate(${totalRotation}deg)`;
             
             setTimeout(() => {
-                prizeResult.innerHTML = '<div class="prize-result-text">🎉 恭喜中奖：特等奖！🎉</div>';
+                // 显示特等奖结果
+                prizeResult.innerHTML = `<div class="prize-result-text">🎉 恭喜中奖：${prizes[targetPrizeIndex]}！🎉</div>`;
                 prizeResult.classList.add('show');
                 claimButton.style.display = 'block';
                 lotteryButton.style.display = 'none';
